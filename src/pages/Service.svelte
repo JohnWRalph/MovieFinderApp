@@ -98,7 +98,7 @@
             >
                 <img
                     class="serviceImage"
-                    src="src/assets/{service.service.id}.svg"
+                    src="/{service.service.id}.svg"
                     alt={service.service.id}
                 />
                 <br />
