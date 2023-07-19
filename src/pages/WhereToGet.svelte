@@ -8,7 +8,7 @@
     import { push } from "svelte-spa-router";
     import { currentService, selectedCountry } from "../store/services";
     import Service from "./Service.svelte";
-
+  
     function getTitle() {
         const currentTitle = window.location.hash.slice(13);
         console.log(currentTitle);

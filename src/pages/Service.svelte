@@ -7,20 +7,24 @@
     } from "../store/services";
     import { onMount } from "svelte";
     import { push } from "svelte-spa-router";
-
+   
     async function getServices() {
+        console.log(import.meta.env.VITE_SEARCH_KEY);
+    console.log(import.meta.env.VITE_SEARCH_HOST);
         const options = {
             method: "GET",
             url: "https://streaming-availability.p.rapidapi.com/v2/services",
             headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_SERVICE_KEY,
-                "X-RapidAPI-Host": import.meta.env.VITE_SERVICE_HOST,
+                "X-RapidAPI-Key": import.meta.env.VITE_SEARCH_KEY,
+                "X-RapidAPI-Host": import.meta.env.VITE_SEARCH_HOST,
             },
         };
 
         try {
+
             const response = await axios.request(options);
             const result = response.data.result;
+            console.log(result);
             const sortedServices = Object.entries(result).map(
                 ([id, service]) => ({
                     id,
@@ -32,6 +36,7 @@
         } catch (error) {
             console.error(error);
         }
+        
     }
 
     getServices();
