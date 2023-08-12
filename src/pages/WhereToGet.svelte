@@ -176,7 +176,7 @@
                         >
                             <img
                             style="width: 100px; height: 100px;"
-                                src="src/assets/{service.key}.svg"
+                                src="{service.key}.svg"
                                 alt={service.key}
                             />
                         </div>
