@@ -9,8 +9,7 @@
     import { push } from "svelte-spa-router";
    
     async function getServices() {
-        console.log(import.meta.env.VITE_SEARCH_KEY);
-    console.log(import.meta.env.VITE_SEARCH_HOST);
+     
         const options = {
             method: "GET",
             url: "https://streaming-availability.p.rapidapi.com/v2/services",
@@ -24,7 +23,7 @@
 
             const response = await axios.request(options);
             const result = response.data.result;
-            console.log(result);
+         
             const sortedServices = Object.entries(result).map(
                 ([id, service]) => ({
                     id,
@@ -32,7 +31,7 @@
                 })
             );
             services.set(sortedServices);
-            console.log($services);
+        
         } catch (error) {
             console.error(error);
         }
@@ -40,12 +39,12 @@
     }
 
     getServices();
-    console.log("services");
+  
 
     let countryOptions = [];
 
     function getCountryOptions(country) {
-        console.log(country);
+  
         countryOptions = Object.keys(
             $currentService.service.countries[country].supportedStreamingTypes
         ).map((key) => ({
@@ -53,22 +52,22 @@
             value: $currentService.service.countries[country]
                 .supportedStreamingTypes[key],
         }));
-        console.log(countryOptions);
+
         return countryOptions;
     }
 
     function getServiceDetails(index) {
         countryOptions = [];
-        console.log(index);
+      
         currentService.set($services[index]);
-        console.log($services);
+  
         const sortedCountries = Object.entries(
             $services[index].service.countries
         ).map(([id, country]) => ({
             id,
             country,
         }));
-        console.log(sortedCountries);
+      
         availableCountries.set(sortedCountries);
     }
     let selectedCountry;
@@ -85,13 +84,7 @@
     <button class="btn btn-secondary" on:click={() => push("/")}>Home</button>
     <br />
     <h1>Select a service for additional information</h1>
-    <p>
-        Developers: Queries data using the Streaming Availability API <a
-            class="link"
-            href="https://rapidapi.com/movie-of-the-night-movie-of-the-night-default/api/streaming-availability/"
-            >found here.</a
-        >
-    </p>
+  
 
     <div class="services">
         {#each $services as service, i}

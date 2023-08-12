@@ -8,8 +8,7 @@
     "/wheretoget": WhereToGet,
     "/services": Service,
   };
-  console.log(import.meta.env.VITE_SEARCH_KEY);
-    console.log(import.meta.env.VITE_SEARCH_HOST);
+  
 </script>
 
 <main>

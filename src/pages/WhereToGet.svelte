@@ -8,19 +8,17 @@
     import { push } from "svelte-spa-router";
     import { currentService, selectedCountry } from "../store/services";
     import Service from "./Service.svelte";
-  
+
     function getTitle() {
         const currentTitle = window.location.hash.slice(13);
-        console.log(currentTitle);
-       
+
+
         return currentTitle;
     }
-    console.log($currentSelectionId);
+   
     const currentTitle = getTitle();
 
     async function search() {
-   
-
         const options = {
             method: "GET",
             url: "https://streaming-availability.p.rapidapi.com/v2/get/basic",
@@ -30,15 +28,13 @@
                 output_language: "en",
             },
             headers: {
-                "X-RapidAPI-Key":
-                    import.meta.env.VITE_SEARCH_KEY,
+                "X-RapidAPI-Key": import.meta.env.VITE_SEARCH_KEY,
                 "X-RapidAPI-Host": import.meta.env.VITE_SEARCH_HOST,
             },
         };
 
         try {
             const response = await axios.request(options);
-            console.log(response.data.result.youtubeTrailerVideoLink);
             currentSelectionData.set(response.data.result);
             streamingInfo.set(
                 Object.keys($currentSelectionData.streamingInfo).map((key) => ({
@@ -46,7 +42,7 @@
                     value: $currentSelectionData.streamingInfo[key],
                 }))
             );
-            console.log($streamingInfo);
+       
         } catch (error) {
             console.error(error);
         }
@@ -63,7 +59,7 @@
             key,
             value: $currentSelectionData.streamingInfo[country][key],
         }));
-        console.log(countryOptions);
+       
     }
 </script>
 
@@ -83,54 +79,86 @@
         </div>
 
         <div class="additonalDetails">
-            <div class="bannerTitle">
+            <!-- <div class="bannerTitle">
                 {$currentSelectionData.title} ({$currentSelectionData.year})
-            </div>
+            </div> -->
             <div class="detailsTop">
                 <img
                     class="detailsImage"
                     src={$currentSelectionData.posterURLs.original}
                     alt="no image found"
                 />
-                <div class="detailsInfo">
-                    {$currentSelectionData.tagline}
-                    <br />
-                    {$currentSelectionData.overview}
-                    <br />
-                    Cast:
-                    {$currentSelectionData.cast}
-                    <br />
-                    Directors:
-                    {$currentSelectionData.directors}
-                    <br />
-                    Runtime:
-                    {$currentSelectionData.runtime}
-                    <br />
-                    <div class="stats shadow">
-                        <div class="stat">
-                            <div class="stat-title">IMDB RATING</div>
-                            <div class="stat-value">
-                                <div
-                                    class="radial-progress"
-                                    style="--value:{$currentSelectionData.imdbRating};"
-                                >
-                                    {$currentSelectionData.imdbRating}
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="stat">
-                            <div class="stat-title">IMDB VOTE COUNT</div>
-                            <div class="stat-value">
-                                {$currentSelectionData.imdbVoteCount}
-                            </div>
-                        </div>
+                <div class="detailsInfo">
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead>
+                                <tr>
+                                   <th>Title</th>
+                                    <th> {$currentSelectionData.title} ({$currentSelectionData.year})</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 <!-- row 1 -->
+                                 <tr>
+                                    <td>Tagline</td>
+                                    <td> {$currentSelectionData.tagline}</td>
+                                </tr>
+                                <!-- row 1 -->
+                                <tr>
+                                    <td>Overview</td>
+                                    <td>{$currentSelectionData.overview}</td>
+                                </tr>
+                                <!-- row 2 -->
+                                <tr>
+                                    <td>Cast</td>
+                                    <td>{$currentSelectionData.cast}</td>
+                                </tr>
+                                <!-- row 3 -->
+                                <tr>
+                                    <td>Directors</td>
+                                    <td>{$currentSelectionData.directors}</td>
+                                </tr>
+                                  <!-- row 4 -->
+                                  <tr>
+                                    <td>Runtime</td>
+                                    <td>{$currentSelectionData.runtime}</td>
+                                </tr>
+                                    <!-- row 5 -->
+                                    <tr>
+                                        <td></td>
+                                        <td><div class="stats shadow">
+                                            <div class="stat">
+                                                <div class="stat-title">IMDB RATING</div>
+                                                <div class="stat-value">
+                                                    <div
+                                                        class="radial-progress"
+                                                        style="--value:{$currentSelectionData.imdbRating};"
+                                                    >
+                                                        {$currentSelectionData.imdbRating}
+                                                    </div>
+                                                </div>
+                                            </div>
+                    
+                                            <div class="stat">
+                                                <div class="stat-title">IMDB VOTE COUNT</div>
+                                                <div class="stat-value">
+                                                    {$currentSelectionData.imdbVoteCount}
+                                                </div>
+                                            </div>
+                                        </div></td>
+                            </tbody>
+                        </table>
                     </div>
+                  
+                  
+                    
                 </div>
             </div>
             <div class="bottomInformation" />
             Select A Country:
-            <br>
+            <br />
             {#each $streamingInfo as country}
                 <button
                     on:click={() => selectedCountry.set(country.key)}
@@ -142,13 +170,12 @@
             <div class="serviceContainer">
                 {#if countryOptions}
                     {#each countryOptions as service}
-                 
-
                         <div
                             class="serviceImage"
                             on:click={() => currentService.set(service)}
                         >
                             <img
+                            style="width: 100px; height: 100px;"
                                 src="src/assets/{service.key}.svg"
                                 alt={service.key}
                             />
@@ -195,7 +222,7 @@
                                     </tr>
                                     <tr>
                                         <th>Link</th>
-                                        <th class="link">{option.link}</th>
+                                        <th on:click={() => window.open(option.link,"_blank")} class="link">{option.link}</th>
                                         <th />
                                     </tr>
                                     <tr>
@@ -212,8 +239,6 @@
     {/if}
 </div>
 
-
-
 <style global lang="postcss">
     @tailwind base;
     @tailwind components;
@@ -223,16 +248,16 @@
         width: 95vw;
     }
 
-    .bannerVideo{
-        width:95vw;
-        height:400px;
+    .bannerVideo {
+        width: 95vw;
+        height: 400px;
     }
-    .bottomInformation{
-        margin:10px;
-    }
-    .countryOptions{
+    .bottomInformation {
         margin: 10px;
-        border:1px solid black;
+    }
+    .countryOptions {
+        margin: 10px;
+        border: 1px solid black;
         border-radius: 10px;
     }
     .details {
@@ -244,25 +269,25 @@
     }
     .detailsImage {
         height: 300px;
-        margin:auto;
-        margin-left:15px;
+        margin: auto;
+        margin-left: 15px;
+        margin-right:15px;
     }
-    .detailsInfo{
-        margin:auto;
+    .detailsInfo {
+        margin: auto;
+        border-left:1px solid black;
     }
     .detailsTop {
         display: flex;
         flex-direction: row;
         row-gap: 5px;
-        border:1px solid black;
+        border: 1px solid black;
         border-radius: 10px;
     }
-    .serviceContainer{
+    .serviceContainer {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-
-
     }
     .serviceImage {
         height: 100px;
@@ -275,9 +300,9 @@
         align-items: center;
         cursor: pointer;
     }
- 
+
     .trailerVideo {
         height: 100%;
         width: 100%;
-    } 
+    }
 </style>

@@ -9,7 +9,7 @@
 
 
   async function search() {
-    console.log(titleInput);
+   
     parsedTitle = titleInput.replace(/ /g, "%20");
     const parsedInput = titleInput.replace(" ", "%20");
     const options = {
@@ -31,7 +31,7 @@
       const response = await axios.request(options);
       // returnedResults = response.data.d;
       searchResults.set(response.data.result);
-      console.log(response.data.result);
+      
     } catch (error) {
       console.error(error);
     }
@@ -48,6 +48,11 @@
       </p>
       <input
         bind:value={titleInput}
+        on:keypress={(e) => {
+          if (e.key === "Enter") {
+            search();
+          }
+        }}
         type="text"
         placeholder="Enter Title"
         class="input input-bordered titleInput input-primary-focus w-full"
