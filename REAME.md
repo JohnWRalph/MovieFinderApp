@@ -1,1 +1,0 @@
-Movie Finder allows a user to search for movies among the many popular streaming services and lists various information about that movie
